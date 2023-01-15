@@ -8,7 +8,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private weak var yesButton: UIButton!
     @IBOutlet private weak var noButton: UIButton!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     private var currentQuestionIndex: Int = 0
     private var correctAnswers: Int = 0
@@ -21,10 +21,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.layer.cornerRadius = 20
-        
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         statisticServise = StatisticServiceImplementation()
         questionFactory?.requestNextQuestion()
+        activityIndicator.hidesWhenStopped
+        activityIndicator.startAnimating()
         
         alertPresenter = AlertPresenter(viewController: self)
         showLoadingIndicator()
@@ -46,7 +47,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     func didLoadDataFromServer() {
-        activityIndicator.isHidden = true
+        //activityIndicator.isHidden = true
+        activityIndicator.stopAnimating()
         questionFactory?.requestNextQuestion()
     }
     
@@ -56,13 +58,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // MARK: - other Private functions
     private func showLoadingIndicator() {
-        activityIndicator.isHidden = false
+        //activityIndicator.isHidden = false
         activityIndicator.startAnimating()
     }
     
     private func hideLoadingIndicator() {
-        activityIndicator.isHidden = true
+        //activityIndicator.isHidden = true
+        activityIndicator.stopAnimating()
     }
+    
     private func showNetworkError(message: String) {
         hideLoadingIndicator()
         
@@ -77,7 +81,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             
             self.questionFactory?.requestNextQuestion()
         }
-    alertPresenter?.showAlert(quiz: model)
+        alertPresenter?.showAlert(quiz: model)
     }
     
     private func show(quiz step: QuizStepViewModel) {

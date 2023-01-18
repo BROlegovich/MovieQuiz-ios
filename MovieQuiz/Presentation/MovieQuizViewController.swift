@@ -23,6 +23,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         statisticServise = StatisticServiceImplementation()
         questionFactory?.requestNextQuestion()
+        presenter.viewController = self
         
         alertPresenter = AlertPresenter(viewController: self)
         showLoadingIndicator()
@@ -102,7 +103,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         alertPresenter?.showAlert(quiz: alertModel)
     }
 
-        private func showAnswerResult(isCorrect: Bool) {
+    func showAnswerResult(isCorrect: Bool) {
             if isCorrect {
                 correctAnswers += 1
             }
@@ -149,19 +150,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         
         @IBAction private func noButtonClicked(_ sender: UIButton) {
-            guard let currentQuestion = currentQuestion else {
-                return
-            }
-            let givenAnswer = false
-            showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+            presenter.currentQuestion = currentQuestion
+            presenter.noButtonClicked()
         }
         
         @IBAction private func yesButtonClicked(_ sender: UIButton) {
-            guard let currentQuestion = currentQuestion else {
-                return
-            }
-            let givenAnswer = true
-            showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+            presenter.currentQuestion = currentQuestion
+            presenter.yesButtonClicked()
         }
         
     }

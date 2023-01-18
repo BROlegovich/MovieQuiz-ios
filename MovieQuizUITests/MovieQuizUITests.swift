@@ -47,7 +47,7 @@ final class MovieQuizUITests: XCTestCase {
         
         let indexLabel = app.staticTexts["Index"]
         
-        XCTAssertEqual(indexLabel.label, "1/10")
+        XCTAssertEqual(indexLabel.label, "2/10")
         XCTAssertNotEqual(firstPosterData, secondPosterData)
     }
     
